@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mmflash"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.11"
+description = "MMFlash: Faster Speculative Decoding for Vision-Language Models (training code built on SpecForge)"
+authors = [
+    {name = "Sicheng Feng"},
+    {name = "Zigeng Chen"},
+    {name = "Song Wang"},
+    {name = "Gongfan Fang"},
+    {name = "Xinchao Wang"},
+]
+urls = {Homepage = "https://github.com/fscdc/MMFlash"}
+dependencies = [
+    "torch==2.11.0",
+    "transformers==5.8.1",
+    "datasets",
+    "tqdm",
+    "accelerate",
+    "huggingface-hub",
+    "numpy",
+    "openai-harmony",
+    "pydantic",
+    "psutil",
+    "pyyaml",
+    "safetensors",
+    "sglang==0.5.14",
+    "requests",
+    "tensorboard",
+    "typing-extensions",
+    "wandb",
+    "yunchang",
+]
+
+[project.scripts]
+specforge = "specforge.cli:main"
+mmflash = "specforge.cli:main"
+
+[tool.setuptools.packages.find]
+exclude = ["configs*", "scripts*", "tests*"]
+
+[project.optional-dependencies]
+data = ["openai"]
+fa = ["flash-attn", "ninja", "packaging"]
+liger = ["liger-kernel"]

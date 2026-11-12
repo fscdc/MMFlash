@@ -1,0 +1,68 @@
+# DFlash baseline draft for google/gemma-4-E4B-it, trained on the same data as MMFlash (no visual weighting).
+#
+# Online disaggregated training on one 4-GPU node: an SGLang capture server on GPU 0 runs the frozen target and
+# streams its hidden states (and, for MMFlash, the per-token visual-dependence score) through Mooncake to the trainer
+# processes on GPUs 1-3. `specforge train` starts and supervises all of them (deployment.disaggregated.managed_local).
+#
+#   specforge train --config configs/train/gemma4-e4b-dflash.yaml
+#
+# Set data.train_data_path to the target-regenerated training set (scripts/regenerate.sh).
+# Gemma 4 capture needs the SGLang gemma4-spec patch: bash scripts/apply_sglang_gemma4_patch.sh
+model:
+  target_model_path: "google/gemma-4-E4B-it"
+  draft_model_config: "configs/gemma4-e4b-dflash.json"
+  target_backend: sglang
+  # image+text capture through the multimodal server input adapter (needs a vision-language target)
+  input_modality: image
+  trust_remote_code: true
+  # vision-language checkpoints nest the text stack under model.language_model.*
+  embedding_key: "model.language_model.embed_tokens.weight"
+  # SGLang serves Gemma 4 on triton; the vision tower needs sdpa (fa3 ignores its padding-patch mask)
+  sglang_attention_backend: "triton"
+  sglang_mm_attention_backend: "sdpa"
+  mask_token_id: 4
+  torch_dtype: "bfloat16"
+data:
+  train_data_path: "data/regen/gemma4-e4b.jsonl"
+  max_length: 4096
+  chat_template: "gemma4"
+  build_dataset_num_proc: 32
+  cache_dir: "./cache"
+training:
+  strategy: "dflash"
+  num_epochs: 6
+  batch_size: 2
+  accumulation_steps: 4
+  learning_rate: 0.0006
+  warmup_ratio: 0.04
+  max_grad_norm: 1
+  attention_backend: "flex_attention"
+  num_anchors: 512
+  loss_decay_gamma: 7
+  save_interval: 10000
+  log_interval: 50
+  dist_timeout: 30
+  seed: 42
+tracking:
+  report_to: "tensorboard"
+run_id: "gemma4-e4b-dflash"
+output_dir: "outputs/gemma4-e4b-dflash"
+deployment:
+  mode: disaggregated
+  trainer:
+    nnodes: 1
+    nproc_per_node: 3   # = the number of trainer GPUs below
+  disaggregated:
+    control_dir: "outputs/gemma4-e4b-dflash/control"
+    consumer_state_dir: "outputs/gemma4-e4b-dflash/consumer-state"
+    backend: mooncake
+    managed_local:
+      # trainer GPUs, disjoint from the capture server's
+      trainer_cuda_visible_devices: ["1", "2", "3"]
+      mooncake:
+        protocol: tcp
+      capture_servers:
+        - port: 30000
+          cuda_visible_devices: ["0"]
+          tp_size: 1
+          mem_fraction_static: 0.80

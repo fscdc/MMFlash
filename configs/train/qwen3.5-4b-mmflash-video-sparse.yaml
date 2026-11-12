@@ -1,0 +1,79 @@
+# Optional stage 2 for long videos: continue the Qwen/Qwen3.5-4B MMFlash draft on video rows with a sparse draft context
+# (sink + all text + strided image tokens + the most recent 256 positions), the same pattern SGLang serves with
+# SGLANG_DFLASH_DRAFT_SPARSE (print the serving flags with scripts/draft_sparse_env.py).
+#
+# One capture GPU + one trainer GPU:   specforge train --config configs/train/qwen3.5-4b-mmflash-video-sparse.yaml
+#
+# Set model.draft_checkpoint_path to the exported stage-1 draft (scripts/export_draft.sh), and data.* to the
+# regenerated video rows and their visual-dependence sidecar.
+model:
+  target_model_path: "Qwen/Qwen3.5-4B"
+  draft_model_config: "configs/qwen3.5-4b-mmflash.json"
+  draft_checkpoint_path: "outputs/qwen3.5-4b-mmflash/export"
+  target_backend: sglang
+  input_modality: image
+  trust_remote_code: true
+  embedding_key: "model.language_model.embed_tokens.weight"
+  torch_dtype: "bfloat16"
+data:
+  train_data_path: "data/regen/qwen3.5-4b-video.jsonl"
+  max_length: 49152
+  chat_template: "qwen3.5"
+  build_dataset_num_proc: 16
+  dataloader_num_workers: 2
+  cache_dir: "./cache"
+  visual_score_path: "data/visual_kl/qwen3.5-4b-video"
+  visual_score_transform: "quantile"
+  visual_score_confidence_gate: true
+training:
+  strategy: "mmflash"
+  loss_type: "mmflash"
+  mmflash_smoothing: 0.5
+  visual_alpha: 1.0
+  draft_sparse:
+    sink: 4         # first positions always visible
+    text: true      # every non-image token visible
+    stride: 32      # image tokens at offsets 16, 48, ... of every frame
+    window: 256     # plus the most recent 256 positions before the anchor
+  num_epochs: 3
+  batch_size: 2
+  accumulation_steps: 4
+  learning_rate: 0.0001
+  warmup_ratio: 0.04
+  max_grad_norm: 1
+  attention_backend: "flex_attention"
+  num_anchors: 512
+  loss_decay_gamma: 7
+  save_interval: 100
+  log_interval: 10
+  dist_timeout: 30
+  seed: 42
+runtime:
+  producer_lease: 1
+  in_flight_high_watermark: 16   # captured rows waiting for the trainer (about 1 GB each)
+  in_flight_low_watermark: 8
+tracking:
+  report_to: "tensorboard"
+run_id: "qwen3.5-4b-mmflash-video-sparse"
+output_dir: "outputs/qwen3.5-4b-mmflash-video-sparse"
+deployment:
+  mode: disaggregated
+  trainer:
+    nnodes: 1
+    nproc_per_node: 1
+  disaggregated:
+    control_dir: "outputs/qwen3.5-4b-mmflash-video-sparse/control"
+    consumer_state_dir: "outputs/qwen3.5-4b-mmflash-video-sparse/consumer-state"
+    backend: mooncake
+    client_buffer_size: 2147483648   # above one row's hidden states
+    managed_local:
+      trainer_cuda_visible_devices: ["1"]
+      mooncake:
+        protocol: tcp
+        global_segment_size_bytes: 51539607552   # 48 GiB for the in-flight rows
+        local_buffer_size_bytes: 2147483648
+      capture_servers:
+        - port: 30000
+          cuda_visible_devices: ["0"]
+          tp_size: 1
+          mem_fraction_static: 0.70
