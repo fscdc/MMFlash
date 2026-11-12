@@ -14,7 +14,7 @@
 </div>
 
 > **MMFlash: Faster Speculative Decoding for Vision-Language Models** \
-> [Sicheng Feng](https://fscdc.github.io/), [Zigeng Chen](https://czg1225.github.io/chenzigeng99/), Song Wang, [Gongfan Fang](https://fangggf.github.io/), [Xinchao Wang](https://sites.google.com/site/sitexinchaowang/) \
+> [Sicheng Feng](https://fscdc.github.io/), [Zigeng Chen](https://czg1225.github.io/chenzigeng99/), [Song Wang](https://songw-zju.github.io/), [Gongfan Fang](https://fangggf.github.io/), [Xinchao Wang](https://sites.google.com/site/sitexinchaowang/) \
 > National University of Singapore
 
 ---
