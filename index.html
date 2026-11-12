@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="MMFlash: Faster Speculative Decoding for Vision-Language Models">
+  <meta name="keywords" content="Speculative Decoding, Vision-Language Models, VLMs, Block Diffusion Drafting, DFlash, MMFlash">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MMFlash: Faster Speculative Decoding for Vision-Language Models</title>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="https://github.com/fscdc/MMFlash">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">MMFlash: Faster Speculative Decoding for Vision-Language Models</h1>
+            <div class="is-size-5 publication-authors">
+                <span class="author-block">
+                    <a href="https://fscdc.github.io/">Sicheng Feng</a><sup>1</sup>&#8192;
+                  </span>
+                  <span class="author-block">
+                    <a href="https://czg1225.github.io/chenzigeng99/">Zigeng Chen</a><sup>1</sup>&#8192;
+                  </span>
+                  <span class="author-block">
+                    Song Wang<sup>1</sup>&#8192;
+                  </span>
+                  <span class="author-block">
+                    <a href="https://fangggf.github.io/">Gongfan Fang</a><sup>1</sup>&#8192;
+                  </span>
+                  <span class="author-block">
+                    <a href="https://sites.google.com/site/sitexinchaowang/">Xinchao Wang</a><sup>1</sup>&#8192;
+                  </span>
+            </div>
+            <!-- Venue, once there is one:
+            <h1 style="font-size:23px;font-weight:bold">VENUE 2026</h1>
+            -->
+
+            <div class="is-size-5 publication-authors">
+                <span><sup>1</sup>National University of Singapore</span></br></br>
+            </div>
+
+            <div class="columns is-centered">
+              <div class="column is-narrow">
+                <figure class="image">
+                  <img src="figure/nus-logo.png" alt="NUS" style="height: 96px; object-fit: contain;">
+                </figure>
+              </div>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="todo"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>PDF</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="todo" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>ArXiv</span>
+                  </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/fscdc/MMFlash"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <!-- Model Link. -->
+                <span class="link-block">
+                  <a href="https://huggingface.co/collections/FSCCS/mmflash-6af09b489ba5237bda91177f"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face" style="width: 20px; height: 20px;">
+                    </span>
+                    <span>Models</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <div align='center'>
+          <video src="./static/videos/demo.mp4"
+                 autoplay loop muted playsinline controls style="max-width:100%;border-radius:8px;"></video>
+        </div>
+        <div class="content has-text-justified" style="margin-top: 1rem;">
+          The same question answered by Qwen3.5-4B with autoregressive decoding and with speculative decoding: a MathVerse question, recorded in real time on one NVIDIA H200 with SGLang (greedy decoding). Speculative decoding is lossless: every method prints the same answer as the target model alone.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview figure, once there is one:
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <div align='center'>
+          <a><img src="./figure/overview.png" style="max-width: 100%;"></a>
+        </div>
+        <div class="content has-text-justified" style="margin-top: 1rem;">
+          Overview of MMFlash.
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <!-- Abstract, once the paper is public:
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Highlights</h2>
+          <div class="content has-text-justified">
+            <ul>
+              <li><b>Diffusion drafting for VLMs</b>: MMFlash brings block-diffusion drafting to vision-language models. The drafter proposes a block of 16 tokens in a single forward pass and the target verifies the block in one pass, so decoding stays lossless while running <b>3.0&times;</b> faster on Qwen3.5-4B / 9B and up to <b>4.7&times;</b> on Qwen3.8-27B (one H200, batch size 1, greedy).</li>
+              <li><b>Vision-free drafter</b>: the drafter never re-encodes the image or video. It reads hidden states of the target, where the visual context is already fused, so its cost does not grow with the number of visual tokens.</li>
+              <li><b>Visual-dependence-aware training</b>: a DFlash drafter's acceptance drops sharply on tokens that depend on the image, and most rejected blocks break there. MMFlash measures each training token's visual dependence on the target and focuses the drafter's loss on those tokens.</li>
+              <li><b>Long videos</b>: a sparse draft context (attention sinks, text, strided visual tokens and a recent window) keeps drafting cheap on 40k-token video prompts; the drafter is trained and served with the same pattern.</li>
+              <li><b>Drop-in serving</b>: the released drafts run with stock SGLang and vLLM (<code>DFLASH</code>), no patches needed (tested with SGLang 0.5.23 and vLLM 0.33.0).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Models</h2>
+          <div class="content has-text-justified">
+            Each draft is paired with its target model in a speculative-decoding server. Every model card on Hugging Face has the serving command and per-benchmark results.
+          </div>
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr><th>Draft</th><th>Target model</th><th class="has-text-right">Draft size</th><th class="has-text-right">Block size</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><a href="https://huggingface.co/FSCCS/Qwen3.5-4B-MMFlash">Qwen3.5-4B-MMFlash</a></td><td><a href="https://huggingface.co/Qwen/Qwen3.5-4B">Qwen/Qwen3.5-4B</a></td><td class="has-text-right">537M</td><td class="has-text-right">16</td></tr>
+              <tr><td><a href="https://huggingface.co/FSCCS/Qwen3.5-9B-MMFlash">Qwen3.5-9B-MMFlash</a></td><td><a href="https://huggingface.co/Qwen/Qwen3.5-9B">Qwen/Qwen3.5-9B</a></td><td class="has-text-right">1.05B</td><td class="has-text-right">16</td></tr>
+              <tr><td><a href="https://huggingface.co/FSCCS/Qwen3.8-27B-MMFlash">Qwen3.8-27B-MMFlash</a></td><td><a href="https://huggingface.co/Qwen/Qwen3.8-27B">Qwen/Qwen3.8-27B</a></td><td class="has-text-right">1.73B</td><td class="has-text-right">16</td></tr>
+              <tr><td><a href="https://huggingface.co/FSCCS/Gemma4-E4B-it-MMFlash">Gemma4-E4B-it-MMFlash</a></td><td><a href="https://huggingface.co/google/gemma-4-E4B-it">google/gemma-4-E4B-it</a></td><td class="has-text-right">537M</td><td class="has-text-right">16</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main results, once there is a figure:
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Main Results</h2>
+          <div class="content has-text-justified">
+          </div>
+          <figure>
+            <img src="./figure/result-1.png" style="max-width: 100%;">
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{feng2026mmflash,
+  title={MMFlash: Faster Speculative Decoding for Vision-Language Models},
+  author={Feng, Sicheng and Chen, Zigeng and Wang, Song and Fang, Gongfan and Wang, Xinchao},
+  journal={arXiv preprint},
+  year={2026},
+}</code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div align="center" class="container">
+      <div class="columns is-centered">
+        <div class="content">
+          This website is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">nerfies</a>.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
