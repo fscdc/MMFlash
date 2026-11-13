@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img src="assets/logo.svg" alt="MMFlash" width="440">
+  </picture>
+</p>
+
 <div align="center">
       <h2><b> MMFlash: Faster Speculative Decoding for Vision-Language Models </b></h2>
 </div>
