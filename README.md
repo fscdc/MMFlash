@@ -27,9 +27,10 @@
 ---
 
 <p align="center">
-  <img src="assets/demo.gif" alt="MMFlash demo: the same question answered by Qwen3.5-4B with autoregressive decoding and with speculative decoding" width="100%">
+  <img src="assets/demo.gif" alt="MMFlash demo: the same question answered by Qwen3.5-9B with autoregressive decoding, EAGLE-3, DFlash and MMFlash" width="100%">
 </p>
-<p align="center"><sub>Qwen3.5-4B on a MathVerse question, recorded in real time on one NVIDIA H200 with SGLang (greedy decoding).
+<p align="center"><sub>Qwen3.5-9B on a MathVista question, recorded in real time on one NVIDIA H200 with SGLang (greedy decoding).
+*EAGLE-3's time is estimated from its average speedup on MathVista on the H200 (1.63×).
 Speculative decoding is lossless: here every method prints the same answer as the target alone. Full-quality video: <a href="assets/demo.mp4">assets/demo.mp4</a>.</sub></p>
 
 ## ⭐ Updates
