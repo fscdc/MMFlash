@@ -30,7 +30,7 @@
   <img src="assets/demo.gif" alt="MMFlash demo: the same question answered by Qwen3.5-9B with autoregressive decoding, EAGLE-3, DFlash and MMFlash" width="100%">
 </p>
 <p align="center"><sub>Qwen3.5-9B on a MathVista question, recorded in real time on one NVIDIA H200 with SGLang (greedy decoding).
-Speculative decoding is lossless: here every method prints the same answer as the target alone. Full-quality video: <a href="assets/demo.mp4">assets/demo.mp4</a>.</sub></p>
+Full-quality video: <a href="assets/demo.mp4">assets/demo.mp4</a>.</sub></p>
 
 ## ⭐ Updates
 
