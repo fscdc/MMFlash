@@ -15,7 +15,7 @@
 ![](https://img.shields.io/github/forks/fscdc/MMFlash?color=lightblue)
 ![](https://img.shields.io/github/last-commit/fscdc/MMFlash?color=green)
 ![](https://img.shields.io/badge/PRs-Welcome-blue)
-<a href="#-citation" target="_blank"><img src="https://img.shields.io/badge/arXiv-coming%20soon-b31b1b.svg" alt="arXiv"></a>
+<a href="https://arxiv.org/abs/2611.18482" target="_blank"><img src="https://img.shields.io/badge/arXiv-2611.18482-b31b1b.svg" alt="arXiv"></a>
 <a href="https://huggingface.co/collections/FSCCS/mmflash-6af09b489ba5237bda91177f" target="_blank"><img src="https://img.shields.io/badge/🤗%20HuggingFace-MMFlash-yellow.svg" alt="HuggingFace"></a>
 
 </div>
@@ -233,13 +233,13 @@ The training code builds on [SpecForge](https://github.com/sgl-project/SpecForge
 
 ## 📖 Citation
 
-If MMFlash is useful for your work, please give us a star ⭐ or cite us (the paper is coming soon):
+If MMFlash is useful for your work, please give us a star ⭐ or cite our [paper](https://arxiv.org/abs/2611.18482):
 
 ```bibtex
 @article{feng2026mmflash,
   title   = {MMFlash: Faster Speculative Decoding for Vision-Language Models},
   author  = {Feng, Sicheng and Chen, Zigeng and Wang, Song and Fang, Gongfan and Wang, Xinchao},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2611.18482},
   year    = {2026}
 }
 ```
