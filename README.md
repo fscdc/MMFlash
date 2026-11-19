@@ -229,6 +229,8 @@ Results go to `results/<name>_results.jsonl`: per benchmark the acceptance lengt
 
 The training code builds on [SpecForge](https://github.com/sgl-project/SpecForge), and the drafter follows [DFlash](https://github.com/z-lab/dflash). Serving relies on the DFlash support in [SGLang](https://github.com/sgl-project/sglang) and [vLLM](https://github.com/vllm-project/vllm), and the distributed data plane on [Mooncake](https://github.com/kvcache-ai/Mooncake). We thank the authors of these projects for making them openly available.
 
+We also sincerely thank Huawei for their support and contribution to the research and development of this model and algorithm.
+
 ---
 
 ## 📖 Citation
